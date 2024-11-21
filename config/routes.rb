@@ -1,14 +1,37 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+   # Root path (головна сторінка сайту)
+   root "books#index"
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
-end
+   # Маршрути для користувачів
+   resources :users do
+     # Лише авторизовані користувачі можуть додавати відгуки
+     resources :reviews, only: [:create, :destroy]
+   end
+ 
+   # Маршрути для бібліотекарів
+   resources :librarians, only: [:index, :edit, :update] do
+     member do
+       get :manage_books
+     end
+   end
+ 
+   # Маршрути для адміністраторів (керування користувачами)
+   resources :moderators, only: [:index, :destroy]
+ 
+   # Маршрути для книг (включно з відгуками)
+   resources :books do
+     collection do
+       get :search_by_title
+       get :search_by_category
+     end
+ 
+     # Відгуки на книги
+     resources :reviews, only: [:index]
+   end
+ 
+   # Маршрути для категорій
+   resources :categories, only: [:index, :show]
+ 
+   # Додатковий маршрут для сторінки стану системи
+   get "up" => "rails/health#show", as: :rails_health_check
+  end
