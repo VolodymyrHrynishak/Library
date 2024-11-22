@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+  resources :books do
+    resources :reviews, only: [:new, :create] # Додаємо nested маршрути для відгуків
+  end
   # Root path (головна сторінка сайту)
   root "books#index"
 

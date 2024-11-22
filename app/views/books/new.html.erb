@@ -1,0 +1,45 @@
+<h1>Add a New Book</h1>
+
+<%= form_with(model: @book, local: true) do |form| %>
+  <% if @book.errors.any? %>
+    <div>
+      <h2>Errors:</h2>
+      <ul>
+        <% @book.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title, 'Title' %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :author, 'Author' %>
+    <%= form.text_field :author, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :publication_year, 'Publication Year' %>
+    <%= form.number_field :publication_year %>
+  </div>
+
+  <div>
+    <%= form.label :genre, 'Genre' %>
+    <%= form.text_field :genre, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, 'Category' %>
+    <%= form.collection_select :category_id, Category.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div>
+    <%= form.submit 'Add Book' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back to Book List', books_path, class: 'btn btn-secondary' %>

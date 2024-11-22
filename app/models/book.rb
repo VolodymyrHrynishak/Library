@@ -1,7 +1,7 @@
 class Book < ApplicationRecord
-  has_many :reviews
-  belongs_to :category
-  validates :title, presence: true
+  has_many :reviews, dependent: :destroy
+  belongs_to :category, optional: true
+  validates :title, presence: true, uniqueness: true
   validates :author, presence: true
   validates :publication_year, 
   numericality: { only_integer: true, 
@@ -9,5 +9,4 @@ class Book < ApplicationRecord
                   less_than_or_equal_to: Date.today.year }, 
   allow_nil: true
   validates :genre, presence: true
-  validates :title, uniqueness: true
 end
